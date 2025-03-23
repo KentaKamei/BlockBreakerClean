@@ -29,15 +29,13 @@ public class GameManager : MonoBehaviour
     {
         if (isGameOver) return;
         isGameOver = true;
-        Debug.Log("ゲームオーバー！");
         // ここにゲームオーバー演出やUI表示など追加できる
-        Invoke("Restart", 2f); // 2秒後に再スタート
+        SceneManager.LoadScene("GameOver"); 
     }
 
     public void GameClear()
     {
         isGameOver = true;
-        Debug.Log("ゲームクリア！");
         // ボールを止める
         Ball ball = FindObjectOfType<Ball>();
         if (ball != null)
@@ -45,12 +43,7 @@ public class GameManager : MonoBehaviour
             ball.Stop();
         }
         // ここにゲームクリア演出やUI表示など追加できる
-        Invoke("Restart", 2f);
-    }
-
-    void Restart()
-    {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        SceneManager.LoadScene("GameClear");
     }
 }
 
