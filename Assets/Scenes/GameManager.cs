@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement; // リスタート用
+using TMPro;
+
 
 public class GameManager : MonoBehaviour
 {
@@ -9,12 +11,23 @@ public class GameManager : MonoBehaviour
     private bool isGameOver = false;
     private bool isPaused = false;
     public GameObject pauseText;
+    private Coroutine blinkCoroutine; // ← 点滅用のコルーチン
+    private TextMeshProUGUI pauseTextUI; // ← Text本体（.enabledを使うため）
 
     void Awake()
     {
         // シングルトンの設定
         if (instance == null) instance = this;
         else Destroy(gameObject);
+    }
+    void Start()
+    {
+        // pauseText が TextMeshPro の場合に .enabled 切り替えが使える
+        if (pauseText != null)
+        {
+            pauseTextUI = pauseText.GetComponent<TextMeshProUGUI>();
+            pauseText.SetActive(false); // 最初は非表示
+        }
     }
 
     void Update()
@@ -37,7 +50,29 @@ public class GameManager : MonoBehaviour
         Time.timeScale = isPaused ? 0f : 1f; 
         if (pauseText != null)
         {
-            pauseText.SetActive(isPaused);
+            if (isPaused)
+            {
+                pauseText.SetActive(true);
+                if (pauseTextUI != null)
+                {
+                    blinkCoroutine = StartCoroutine(BlinkPauseText());
+                }
+            }
+            else
+            {
+                if (blinkCoroutine != null) StopCoroutine(blinkCoroutine);
+                if (pauseTextUI != null) pauseTextUI.enabled = true; // 強制ON
+                pauseText.SetActive(false); // 非表示に戻す
+            }
+        }
+    }
+
+    IEnumerator BlinkPauseText()
+    {
+        while (true)
+        {
+            pauseTextUI.enabled = !pauseTextUI.enabled;
+            yield return new WaitForSecondsRealtime(0.5f); // ← ポーズ中でも動く！
         }
     }
 
