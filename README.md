@@ -43,7 +43,7 @@
 
 
 ## 📷 プレイ動画
-[YouTubeで見る](https://www.youtube.com/watch?v=hIHd1AqgFkk)
+[YouTubeで見る](https://youtu.be/WYPXYn0KalU)
 
 ---
 
